@@ -10,6 +10,8 @@ import java.util.List;
 
 public class UserService implements IUser {
     private final Connection connection;
+    private final String SELECT_ALL = "select * from user_manager.user";
+    private final String SELECT_BY_ID_PROVINCE = "select * from user_manager.province where id = ?";
 
     {
         try {
@@ -22,10 +24,9 @@ public class UserService implements IUser {
     @Override
     public List<User> selectAllUser() {
         List<User> users = new ArrayList<>();
-        String sql = "select * from user_manager.user";
         if (connection != null) {
             try {
-                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     int id = resultSet.getInt("id");
@@ -45,10 +46,9 @@ public class UserService implements IUser {
     @Override
     public Province selectProvince(int id) {
         Province province = null;
-        String sql = "select * from user_manager.province where id = ?";
         if (connection != null) {
             try {
-                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID_PROVINCE);
                 preparedStatement.setInt(1, id);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
